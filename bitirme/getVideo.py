@@ -8,6 +8,7 @@ parser = argparse.ArgumentParser(description='Parse arguments')
 parser.add_argument('--video', help = 'Path to video file.')
 args = parser.parse_args()
 
+outputFile = "mask_rcnn_out_py.avi"
 if (args.video):
     #lets open the video file
     if not os.path.isfile(args.video):
@@ -20,8 +21,8 @@ else:
     cap = cv.VideoCapture(0)
 
 #writing the output video with cv.videowriter
-if(not args.image):
-    vid_writer = cv.VideoWriter(outputFile, cv.VideoWriter_fourcc('M','J','P','G'), 28, (round(cap.get(cv.CAP_PROP_FRAME_WIDTH)),round(cap.get(cv.CAP_PROP_FRAME_HEIGHT))))
+
+video_writer = cv.VideoWriter(outputFile, cv.VideoWriter_fourcc('M','J','P','G'), 28, (round(cap.get(cv.CAP_PROP_FRAME_WIDTH)),round(cap.get(cv.CAP_PROP_FRAME_HEIGHT))))
     
 while cv.waitKey(1) < 0:
         
@@ -33,3 +34,10 @@ while cv.waitKey(1) < 0:
         print("Video saved at",outputFile)
         cv.waitKey(3000)
         break
+
+    containFrame, frame = cap.read()
+    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    #video_writer.write(frame.astype(np.uint8))
+    cv.imshow('frame', gray)
+    if cv.waitKey(1) & 0xFF == ord('q'):
+        sys.exit(0)
